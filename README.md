@@ -1,9 +1,17 @@
 # pavlov-bot-2.0
-A Pavlov shack discord RCON bot based of off makupis but fully ported to current python and discord versions 
+A Pavlov shack discord RCON bot based of off makupis but fully ported to current python and discord versions
 
+# requirments
+- discord.py
+- colorama
+- platform
+- json
+- os
+- asyncio
+- async-pavlov
+- Basic knowledge of how to setup a bot
 
-
-# plans 
+# plans
 
 - cogs 
 - commands split into 3 groups (civ, mod, admin) 
@@ -11,4 +19,3 @@ A Pavlov shack discord RCON bot based of off makupis but fully ported to current
 - all relevant commands added to the bot
 - proper error handling
 - docker process
- 
