@@ -11,11 +11,11 @@ A Pavlov shack discord RCON bot based of off makupis but fully ported to current
 - async-pavlov
 - Basic knowledge of how to setup a bot
 
-# plans
+# check list 
 
-- cogs 
-- commands split into 3 groups (civ, mod, admin) 
-- access to use multiple servers with commands
-- all relevant commands added to the bot
-- proper error handling
-- docker process
+- cogs ✅
+- commands split into 3 groups (civ, mod, admin)🕕 
+- access to use multiple servers with commands❌
+- all relevant commands added to the bot🕕
+- proper error handling❌
+- docker process❌
