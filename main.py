@@ -14,7 +14,7 @@ bot = commands.Bot(command_prefix=config["prefix"], intents=discord.Intents.all(
 
 
 def print_banner():
-    ascii_art = Fore.CYAN + """
+    ascii_art = Fore.RED + """
     ██████╗  █████╗ ██╗   ██╗██╗      ██████╗ ██╗   ██╗
     ██╔══██╗██╔══██╗██║   ██║██║     ██╔═══██╗██║   ██║
     ██████╔╝███████║██║   ██║██║     ██║   ██║██║   ██║
@@ -24,11 +24,11 @@ def print_banner():
     """ + Style.RESET_ALL
 
     info = [
-        (Fore.CYAN + "  Bot"        + Style.RESET_ALL, "Pavlov RCON Bot"),
+        (Fore.LIGHTGREEN_EX + "  Bot"        + Style.RESET_ALL, "Pavlov RCON Bot"),
         (Fore.CYAN + "  Prefix"     + Style.RESET_ALL, config["prefix"]),
-        (Fore.CYAN + "  Python"     + Style.RESET_ALL, platform.python_version()),
-        (Fore.CYAN + "  OS"         + Style.RESET_ALL, platform.system()),
-        (Fore.CYAN + "  discord.py" + Style.RESET_ALL, discord.__version__),
+        (Fore.LIGHTMAGENTA_EX + "  Python"     + Style.RESET_ALL, platform.python_version()),
+        (Fore.BLACK + "  OS"         + Style.RESET_ALL, platform.system()),
+        (Fore.LIGHTYELLOW_EX + "  discord.py" + Style.RESET_ALL, discord.__version__),
     ]
 
     print(ascii_art)
