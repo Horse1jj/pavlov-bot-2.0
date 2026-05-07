@@ -17,5 +17,6 @@ A Pavlov shack discord RCON bot based of off makupis but fully ported to current
 - commands split into 3 groups (civ, mod, admin) 1/3 
 - access to use multiple servers with commands ✅
 - all relevant commands added to the bot🕕
-- proper error handling❌
+- proper error handling ✅
 - docker process❌
+- Hybrid commands option in config ❌

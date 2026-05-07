@@ -16,9 +16,11 @@ async def send_rcon(server_name: str, command: str, *args):
         password=server["password"]
     )
 
+    full_command = f"{command} {' '.join(args)}".strip()
+
     await rcon.open()
     try:
-        response = await rcon.send(command, *args)
+        response = await rcon.send(full_command)
     finally:
         await rcon.close()
 
