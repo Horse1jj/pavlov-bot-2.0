@@ -1,5 +1,11 @@
 import discord
+import json
 from discord.ext import commands
+
+with open("config.json") as f:
+    config = json.load(f)
+
+cmd = commands.hybrid_command if config.get("hybrid") else commands.command
 
 PAVLOV_COMMANDS = {
     "Player": [
@@ -58,8 +64,8 @@ PAVLOV_COMMANDS = {
         ("tttpausetimer", "[True/False]", "Pauses the TTT timer"),
     ],
     "Public": [
-        ("players" , "[Servername]", "Shows all players on the selected server"),
-        ("ping" , "", "Shows the bots ping"),
+        ("players", "[Servername]", "Shows all players on the selected server"),
+        ("ping", "", "Shows the bots ping"),
     ],
 }
 
@@ -71,7 +77,7 @@ class Help(commands.Cog):
         self.bot = bot
         bot.remove_command("help")
 
-    @commands.command()
+    @cmd()
     async def help(self, ctx):
         prefix = await self.bot.get_prefix(ctx)
         if isinstance(prefix, list):
@@ -89,11 +95,11 @@ class Help(commands.Cog):
                 if len(current_chunk) + len(section) + len(line) > MAX_CHARS:
                     chunks.append(current_chunk)
                     current_chunk = section + line
-                    section = ""  # already included
+                    section = ""
                 else:
                     section += line
 
-            section += "\n"  # space between categories
+            section += "\n"
             current_chunk += section
 
         if current_chunk:
@@ -101,7 +107,7 @@ class Help(commands.Cog):
 
         for i, chunk in enumerate(chunks, start=1):
             embed = discord.Embed(
-                title=f"Commands",
+                title="Commands",
                 description=chunk,
                 color=discord.Color.dark_grey()
             )

@@ -7,12 +7,17 @@ from utils.sender_function import send_rcon
 with open("servers.json") as f:
     SERVERS = json.load(f)
 
+with open("config.json") as f:
+    config = json.load(f)
+
+cmd = commands.hybrid_command if config.get("hybrid") else commands.command
+
 
 class Civilian(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(help="Shows all players on a server")
+    @cmd(help="Shows all players on a server")
     async def players(self, ctx, server_name: str = None):
         if server_name is None:
             server_list = "\n".join(f"`{s}`" for s in SERVERS.keys())
@@ -50,7 +55,7 @@ class Civilian(commands.Cog):
 
         await ctx.send(embed=embed)
 
-    @commands.command(help="Check the bot's response time")
+    @cmd(help="Check the bot's response time")
     async def ping(self, ctx):
         start = time.monotonic()
         msg = await ctx.send("Pinging...")

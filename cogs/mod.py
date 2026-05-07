@@ -1,14 +1,19 @@
-import discord
+import json
 from discord.ext import commands
 from utils.permissions import has_server_permission
 from utils.sender_function import send_rcon
+
+with open("config.json") as f:
+    config = json.load(f)
+
+cmd = commands.hybrid_command if config.get("hybrid") else commands.command
 
 
 class Mod(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name="kick", help="Kick a player from the server")
+    @cmd(name="kick", help="Kick a player from the server")
     async def kick(self, ctx, unique_id: str, server_name: str):
         if not has_server_permission(ctx, server_name, required="modroles"):
             await ctx.send("You do not have permission to use this command.")
@@ -19,7 +24,7 @@ class Mod(commands.Cog):
         except Exception as e:
             await ctx.send(f"Failed to kick player: `{e}`")
 
-    @commands.command(name="ban", help="Ban a player from the server")
+    @cmd(name="ban", help="Ban a player from the server")
     async def ban(self, ctx, unique_id: str, server_name: str):
         if not has_server_permission(ctx, server_name, required="modroles"):
             await ctx.send("You do not have permission to use this command.")
@@ -30,7 +35,7 @@ class Mod(commands.Cog):
         except Exception as e:
             await ctx.send(f"Failed to ban player: `{e}`")
 
-    @commands.command(name="unban", help="Unban a player from the server")
+    @cmd(name="unban", help="Unban a player from the server")
     async def unban(self, ctx, unique_id: str, server_name: str):
         if not has_server_permission(ctx, server_name, required="modroles"):
             await ctx.send("You do not have permission to use this command.")
@@ -41,7 +46,7 @@ class Mod(commands.Cog):
         except Exception as e:
             await ctx.send(f"Failed to unban player: `{e}`")
 
-    @commands.command(name="kill", help="Kill a player in the game")
+    @cmd(name="kill", help="Kill a player in the game")
     async def kill(self, ctx, unique_id: str, server_name: str):
         if not has_server_permission(ctx, server_name, required="modroles"):
             await ctx.send("You do not have permission to use this command.")
@@ -52,7 +57,7 @@ class Mod(commands.Cog):
         except Exception as e:
             await ctx.send(f"Failed to kill player: `{e}`")
 
-    @commands.command(name="slap", help="Slap a player in the game")
+    @cmd(name="slap", help="Slap a player in the game")
     async def slap(self, ctx, unique_id: str, server_name: str, damage: int = 10):
         if not has_server_permission(ctx, server_name, required="modroles"):
             await ctx.send("You do not have permission to use this command.")
@@ -63,7 +68,7 @@ class Mod(commands.Cog):
         except Exception as e:
             await ctx.send(f"Failed to slap player: `{e}`")
 
-    @commands.command(name="switchteam", help="Switch a player to a different team")
+    @cmd(name="switchteam", help="Switch a player to a different team")
     async def switchteam(self, ctx, unique_id: str, team_id: int, server_name: str):
         if not has_server_permission(ctx, server_name, required="modroles"):
             await ctx.send("You do not have permission to use this command.")
@@ -74,7 +79,7 @@ class Mod(commands.Cog):
         except Exception as e:
             await ctx.send(f"Failed to switch player team: `{e}`")
 
-    @commands.command(name="teleport", help="Teleport a player to another player")
+    @cmd(name="teleport", help="Teleport a player to another player")
     async def teleport(self, ctx, unique_id: str, target_unique_id: str, server_name: str):
         if not has_server_permission(ctx, server_name, required="modroles"):
             await ctx.send("You do not have permission to use this command.")
@@ -85,7 +90,7 @@ class Mod(commands.Cog):
         except Exception as e:
             await ctx.send(f"Failed to teleport player: `{e}`")
 
-    @commands.command(name="giveitem", help="Give an item to a player")
+    @cmd(name="giveitem", help="Give an item to a player")
     async def giveitem(self, ctx, unique_id: str, item_id: str, server_name: str, amount: int = 1):
         if not has_server_permission(ctx, server_name, required="modroles"):
             await ctx.send("You do not have permission to use this command.")
@@ -96,7 +101,7 @@ class Mod(commands.Cog):
         except Exception as e:
             await ctx.send(f"Failed to give item to player: `{e}`")
 
-    @commands.command(name="givecash", help="Give cash to a player")
+    @cmd(name="givecash", help="Give cash to a player")
     async def givecash(self, ctx, unique_id: str, amount: int, server_name: str):
         if not has_server_permission(ctx, server_name, required="modroles"):
             await ctx.send("You do not have permission to use this command.")
@@ -107,7 +112,7 @@ class Mod(commands.Cog):
         except Exception as e:
             await ctx.send(f"Failed to give cash to player: `{e}`")
 
-    @commands.command(name="gag", help="Gag a player in voice chat")
+    @cmd(name="gag", help="Gag a player in voice chat")
     async def gag(self, ctx, unique_id: str, server_name: str, gag: bool):
         if not has_server_permission(ctx, server_name, required="modroles"):
             await ctx.send("You do not have permission to use this command.")
@@ -119,7 +124,7 @@ class Mod(commands.Cog):
         except Exception as e:
             await ctx.send(f"Failed to gag/ungag player: `{e}`")
 
-    @commands.command(name="setplayerskin", help="Set a player's skin")
+    @cmd(name="setplayerskin", help="Set a player's skin")
     async def setplayerskin(self, ctx, unique_id: str, skin_id: str, server_name: str):
         if not has_server_permission(ctx, server_name, required="modroles"):
             await ctx.send("You do not have permission to use this command.")
@@ -130,7 +135,7 @@ class Mod(commands.Cog):
         except Exception as e:
             await ctx.send(f"Failed to set player skin: `{e}`")
 
-    @commands.command(name="clearemptyvehicles", help="Remove all unoccupied vehicles from the map")
+    @cmd(name="clearemptyvehicles", help="Remove all unoccupied vehicles from the map")
     async def clearemptyvehicles(self, ctx, server_name: str):
         if not has_server_permission(ctx, server_name, required="modroles"):
             await ctx.send("You do not have permission to use this command.")
@@ -141,7 +146,7 @@ class Mod(commands.Cog):
         except Exception as e:
             await ctx.send(f"Failed to remove empty vehicles: `{e}`")
 
-    @commands.command(name="inspectplayer", help="Get detailed status of a player")
+    @cmd(name="inspectplayer", help="Get detailed status of a player")
     async def inspectplayer(self, ctx, unique_id: str, server_name: str):
         if not has_server_permission(ctx, server_name, required="modroles"):
             await ctx.send("You do not have permission to use this command.")
@@ -152,7 +157,7 @@ class Mod(commands.Cog):
         except Exception as e:
             await ctx.send(f"Failed to inspect player: `{e}`")
 
-    @commands.command(name="inspectteam", help="Get status of all players on a team")
+    @cmd(name="inspectteam", help="Get status of all players on a team")
     async def inspectteam(self, ctx, team_id: int, server_name: str):
         if not has_server_permission(ctx, server_name, required="modroles"):
             await ctx.send("You do not have permission to use this command.")
@@ -163,7 +168,9 @@ class Mod(commands.Cog):
         except Exception as e:
             await ctx.send(f"Failed to inspect team: `{e}`")
 
-    @commands.command(name="tttsetrole", help="Set a player's TTT role")
+    # ── TTT ───────────────────────────────────────────────────────────────────
+
+    @cmd(name="tttsetrole", help="Set a player's TTT role")
     async def tttsetrole(self, ctx, unique_id: str, role_id: int, server_name: str):
         if not has_server_permission(ctx, server_name, required="modroles"):
             await ctx.send("You do not have permission to use this command.")
@@ -174,7 +181,7 @@ class Mod(commands.Cog):
         except Exception as e:
             await ctx.send(f"Failed to set player's TTT role: `{e}`")
 
-    @commands.command(name="tttsetkarma", help="Set a player's TTT karma")
+    @cmd(name="tttsetkarma", help="Set a player's TTT karma")
     async def tttsetkarma(self, ctx, unique_id: str, karma: int, server_name: str):
         if not has_server_permission(ctx, server_name, required="modroles"):
             await ctx.send("You do not have permission to use this command.")
@@ -185,7 +192,7 @@ class Mod(commands.Cog):
         except Exception as e:
             await ctx.send(f"Failed to set player's TTT karma: `{e}`")
 
-    @commands.command(name="tttpausetimer", help="Pause or unpause the TTT timer")
+    @cmd(name="tttpausetimer", help="Pause or unpause the TTT timer")
     async def tttpausetimer(self, ctx, pause: bool, server_name: str):
         if not has_server_permission(ctx, server_name, required="modroles"):
             await ctx.send("You do not have permission to use this command.")
@@ -197,7 +204,7 @@ class Mod(commands.Cog):
         except Exception as e:
             await ctx.send(f"Failed to pause/unpause TTT timer: `{e}`")
 
-    @commands.command(name="tttendround", help="End the current TTT round")
+    @cmd(name="tttendround", help="End the current TTT round")
     async def tttendround(self, ctx, server_name: str):
         if not has_server_permission(ctx, server_name, required="modroles"):
             await ctx.send("You do not have permission to use this command.")
@@ -208,7 +215,7 @@ class Mod(commands.Cog):
         except Exception as e:
             await ctx.send(f"Failed to end TTT round: `{e}`")
 
-    @commands.command(name="tttflushkarma", help="Reset all player karma to 1200")
+    @cmd(name="tttflushkarma", help="Reset all player karma to 1200")
     async def tttflushkarma(self, ctx, server_name: str):
         if not has_server_permission(ctx, server_name, required="modroles"):
             await ctx.send("You do not have permission to use this command.")
@@ -219,7 +226,7 @@ class Mod(commands.Cog):
         except Exception as e:
             await ctx.send(f"Failed to flush TTT karma: `{e}`")
 
-    @commands.command(name="tttgivecredits", help="Give TTT credits to a player")
+    @cmd(name="tttgivecredits", help="Give TTT credits to a player")
     async def tttgivecredits(self, ctx, unique_id: str, amount: int, server_name: str):
         if not has_server_permission(ctx, server_name, required="modroles"):
             await ctx.send("You do not have permission to use this command.")
