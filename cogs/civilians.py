@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 import time
 import json
-from sender_function import send_rcon
+from utils.sender_function import send_rcon
 
 with open("servers.json") as f:
     SERVERS = json.load(f)

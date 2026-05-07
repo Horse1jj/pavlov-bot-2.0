@@ -1,28 +1,28 @@
 {
     "test-server": { //  Server name, This can be anything you want to name it
-        "admins": [445232625892065282, 456868612788092938], //  User IDS that should be able to run commands
-        "roles": [1449793901035782175 , 1449793901035782175], // Role ids that should be able to run commands
+        "modroles": [445232625892065282, 456868612788092938], //  User IDS that should be able to run moderator commands
+        "adminroles": [1449793901035782175 , 1449793901035782175], // Role ids that should be able to run admin commands
         "ip": "13.75.174.32", // Server IPs
         "port": 9104, // RCON Port
         "password": "testing123" // RCON password
     },
     "Server 1": {
-        "admins": [445232625892065282, 456868612788092938],
-        "roles": [1449793901035782175],
+        "modroles": [445232625892065282, 456868612788092938],
+        "adminroles": [1449793901035782175],
         "ip": "127.0.0.1",
         "port": 9101,
         "password": "somepassword"
     },
     "Server 2": {
-        "admins": [445232625892065282, 456868612788092938],
-        "roles": [1449793901035782175],
+        "modroles": [445232625892065282, 456868612788092938],
+        "adminroles": [1449793901035782175],
         "ip": "127.0.0.1",
         "port": 9102,
         "password": "someotherpassword"
     },
     "Server 3": {
-        "admins": [445232625892065282, 456868612788092938],
-        "roles": [1449793901035782175],
+        "modroles": [445232625892065282, 456868612788092938],
+        "adminroles": [1449793901035782175],
         "ip": "127.0.0.1",
         "port": 9103,
         "password": "notmypassword"
