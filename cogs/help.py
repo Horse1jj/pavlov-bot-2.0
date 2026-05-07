@@ -57,6 +57,10 @@ PAVLOV_COMMANDS = {
         ("tttsetkarma", "[UniqueID] [Amount]", "Sets a player's TTT karma"),
         ("tttpausetimer", "[True/False]", "Pauses the TTT timer"),
     ],
+    "Public": [
+        ("players" , "[Servername]", "Shows all players on the selected server"),
+        ("ping" , "", "Shows the bots ping"),
+    ],
 }
 
 MAX_CHARS = 5500
