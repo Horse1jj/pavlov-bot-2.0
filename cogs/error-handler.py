@@ -9,7 +9,7 @@ class ErrorHandler(commands.Cog):
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send(f"Missing argument: `{error.param.name}`\nUsage: `{ctx.prefix}{ctx.command.name} {ctx.command.signature}`")
         elif isinstance(error, commands.CommandNotFound):
-            pass  # silently ignore
+            await ctx.send(f"Unknown command. Use `{ctx.prefix}help` to see available commands.")
         elif isinstance(error, commands.BadArgument):
             await ctx.send(f"Invalid argument. Usage: `{ctx.prefix}{ctx.command.name} {ctx.command.signature}`")
         else:

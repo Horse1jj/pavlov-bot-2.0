@@ -1,6 +1,15 @@
 import json
 from discord.ext import commands
-from colorama import Fore, Style
+
+try:
+    from colorama import Fore, Style
+except ImportError:
+    class _NoColor:
+        GREEN = ""
+        RED = ""
+
+    Fore = _NoColor()
+    Style = type("_NoStyle", (), {"RESET_ALL": ""})()
 
 with open("config.json") as f:
     config = json.load(f)

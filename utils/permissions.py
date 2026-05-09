@@ -4,6 +4,7 @@ from typing import Iterable
 
 from discord import Member
 from discord.ext.commands import Context
+from utils.server_config import resolve_server_name
 
 SERVERS_PATH = Path(__file__).resolve().parents[1] / "servers.json"
 
@@ -20,6 +21,7 @@ def _member_has_role_ids(member: Member, role_ids: Iterable[int]) -> bool:
 
 
 def get_server_role_ids(server_name: str, role_key: str) -> list[int]:
+    server_name = resolve_server_name(server_name, servers=SERVERS)
     server = SERVERS.get(server_name)
     if not server:
         raise ValueError(f"Server '{server_name}' not found in servers.json")

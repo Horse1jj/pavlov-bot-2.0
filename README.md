@@ -1,15 +1,19 @@
 # pavlov-bot-2.0
 A Pavlov Shack Discord RCON bot ported for modern Python and `discord.py`.
 
+
+
+Please credit the makers of this product in a way, Coco111, foste1jj and shareholder chunkybaba22.
+
 ## Overview
 This bot connects Discord to Pavlov server RCON via `async-pavlov` and exposes admin, moderator, and public commands through Discord.
 
 The bot uses:
-- `main.py` to load configuration and cogs
-- `config.json` for Discord prefix, bot token, and hybrid command mode
-- `servers.json` to define one or more Pavlov server connections and role permissions
-- `cogs/` to implement command modules and UI interactions
-- `docker-compose.yml` to run the bot in Docker if desired
+- `main.py` to load configuration and cogs.
+- `config.json` for Discord prefix, bot token, and hybrid command mode.
+- `servers.json` to define one or more Pavlov server connections and role permissions.
+- `cogs/` to implement command modules and UI interactions.
+- `docker-compose.yml` to run the bot in Docker if desired.
 
 ---
 
@@ -28,7 +32,7 @@ Install dependencies with:
 pip install -r packages.txt
 ```
 
-If you prefer manual install:
+If you prefer a manual installation:
 
 ```powershell
 pip install discord.py colorama async-pavlov python-dotenv
@@ -47,10 +51,10 @@ Example structure:
 ```
 
 Fields:
-- `prefix`: command prefix for Discord commands
+- `prefix`: Command prefix for Discord commands.
 - `token`: Discord bot token
-- `default_server`: default server name if you want to refer to one server by default in custom code
-- `hybrid`: when `true`, the bot will use hybrid commands (slash + message commands) instead of plain text commands
+- `default_server`: Default server name if you want to refer to one server by default in custom code.
+- `hybrid`: when `true`, The bot will use hybrid commands (slash + message commands) instead of plain text commands.
 
 ### `servers.json`
 This file maps server names to RCON connection settings and Discord role IDs.
@@ -70,11 +74,11 @@ Example entry:
 ```
 
 Fields:
-- `modroles`: Discord role IDs allowed to use moderator commands
-- `adminroles`: Discord role IDs allowed to use admin commands
-- `ip`: Pavlov server IP
-- `port`: Pavlov server RCON port
-- `password`: RCON password
+- `modroles`: Discord role IDs allowed to use moderator commands.
+- `adminroles`: Discord role IDs allowed to use admin commands.
+- `ip`: Pavlov server IP.
+- `port`: Pavlov server RCON port.
+- `password`: RCON password.
 
 > Use raw numeric role IDs from your server settings.
 
@@ -119,13 +123,13 @@ The Docker setup mounts the repository into `/app` and uses `/app/config.json`.
 The bot automatically loads every `.py` file inside `cogs/` when starting.
 
 Current cogs:
-- `admin.py` — server administration commands
-- `mod.py` — moderator commands
-- `civilians.py` — public player and ping commands
-- `panel.py` — interactive admin menu
-- `help.py` — command help output
-- `error-handler.py` — command error handling
-- `hybrid-sync.py` — hybrid command sync support
+- `admin.py` — Server administration commands.
+- `mod.py` — Moderator commands.
+- `civilians.py` — Public player and ping commands.
+- `panel.py` — Interactive admin menu.
+- `help.py` — Command help output.
+- `error-handler.py` — Command error handling.
+- `hybrid-sync.py` — Hybrid command sync support.
 
 ### Common maintenance tasks
 - Update bot token: edit `config.json` → `token`
@@ -140,10 +144,9 @@ Current cogs:
 The bot uses the prefix from `config.json`. If `prefix` is `;`, commands look like `;help`, `;players`, etc.
 
 ### Public commands
-- `help` — show available commands and usage
-- `players <server_name>` — list players for a given server
-- `ping` — check bot responsiveness
-- `menu` — open the interactive admin command menu
+- `help` — Show available commands and usage
+- `players <server_name>` — List players for a given server
+- `ping` — Check bot responsiveness
 
 ### Moderator commands
 - `kick <UniqueID> <server_name>`
@@ -179,6 +182,7 @@ The bot uses the prefix from `config.json`. If `prefix` is `;`, commands look li
 - `setlimitedammotype <0-5>`
 - `addmod <UniqueID>`
 - `removemod <UniqueID>`
+- `menu` - Opens the interactive admin menu
 
 ### TTT commands
 - `tttsetrole <UniqueID> <RoleID> <server_name>`
@@ -194,8 +198,8 @@ The bot uses the prefix from `config.json`. If `prefix` is `;`, commands look li
 
 ## Permissions and Roles
 Permissions are driven by `servers.json`.
-- `modroles` controls moderator command access
-- `adminroles` controls admin command access
+- `modroles` Controls moderator command access.
+- `adminroles` Controls admin command access.
 
 Each command checks the invoking user's Discord roles against the configured role IDs for the target server.
 
@@ -211,5 +215,5 @@ Each command checks the invoking user's Discord roles against the configured rol
 
 ## Notes
 - The bot loads every cog from `cogs/` on startup.
-- `menu` opens an interactive admin UI with server and player selection.
-- `hybrid` mode enables slash commands if set to `true` in `config.json`.
+- `menu` Opens an interactive admin UI with server and player selection.
+- `hybrid` Mode enables slash commands if set to `true` in `config.json`.
