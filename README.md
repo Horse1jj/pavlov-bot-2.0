@@ -82,7 +82,12 @@ Fields:
 
 ## Starting the Bot
 ### Local Python run
-1. Open a terminal in the repository folder.
+```powershell
+
+  git clone https://github.com/pavlov-bot2.0.git
+```
+
+1.clone the respiratory  
 2. Confirm `config.json` contains your Discord bot token.
 3. Confirm `servers.json` contains valid server entries.
 4. Start the bot:
