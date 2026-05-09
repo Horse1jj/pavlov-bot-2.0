@@ -84,7 +84,7 @@ Fields:
 ### Local Python run
 ```powershell
 
-  git clone https://github.com/pavlov-bot2.0.git
+  git clone https://github.com/Horse1jj/pavlov-bot-2.0
 ```
 
 1.clone the respiratory  
