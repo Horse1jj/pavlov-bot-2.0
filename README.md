@@ -217,3 +217,4 @@ Each command checks the invoking user's Discord roles against the configured rol
 - The bot loads every cog from `cogs/` on startup.
 - `menu` Opens an interactive admin UI with server and player selection.
 - `hybrid` Mode enables slash commands if set to `true` in `config.json`.
+- `custom` Used for sending commands that are not listed in the normal commands.
