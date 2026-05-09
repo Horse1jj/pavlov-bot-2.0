@@ -241,11 +241,8 @@ class Mod(commands.Cog):
             return
 
         try:
-            response = await send_rcon(server_name, command_text)
-            if response in (None, "", {}):
-                await ctx.send(f"Sent custom command to `{server_name}`: `{command_text}`")
-            else:
-                await ctx.send(f"Custom command response from `{server_name}`:\n```\n{response}\n```")
+            await send_rcon(server_name, command_text, wait_response=False)
+            await ctx.send(f"Acknowledged. Sent custom command to `{server_name}`.")
         except Exception as e:
             await ctx.send(f"Failed to run custom command: `{e}`")
 

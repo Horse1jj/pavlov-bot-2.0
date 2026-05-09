@@ -13,7 +13,7 @@ with open(SERVERS_PATH, "r", encoding="utf-8") as f:
     SERVERS = json.load(f)
 
 
-async def send_rcon(server_name: str, command: str, *args):
+async def send_rcon(server_name: str, command: str, *args, wait_response: bool = True):
     server_name = resolve_server_name(server_name, servers=SERVERS)
     server = SERVERS.get(server_name)
     if not server:
@@ -24,7 +24,11 @@ async def send_rcon(server_name: str, command: str, *args):
     rcon = PavlovRCON(server["ip"], int(server["port"]), server["password"], timeout=timeout)
 
     try:
-        return await asyncio.wait_for(rcon.send(full_command), timeout=timeout)
+        if wait_response:
+            return await asyncio.wait_for(rcon.send(full_command, wait_response=True), timeout=timeout)
+
+        await asyncio.wait_for(rcon.send(full_command, wait_response=False), timeout=timeout)
+        return None
     except asyncio.TimeoutError as exc:
         raise TimeoutError(f"RCON server did not reply within {timeout:g} seconds") from exc
     finally:
