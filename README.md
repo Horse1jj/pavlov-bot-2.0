@@ -221,9 +221,4 @@ Each command checks the invoking user's Discord roles against the configured rol
 
 ---
 
-## Exemplar Custom Commands
-- AddAccessManager `PlayerName` = Allows the specified player to manage other players RCON Plus Permissions ingame.
-- RemoveAccessManager `PlayerName` = Removes the specified player's Manager Access.
-- AddWebhook `Webhook URL` = Adds a Webhook to monitor RCON Plus commands being used.
-- RemoveWebhook `Webhook URL` = Removes the specified Webhook URL.
 
