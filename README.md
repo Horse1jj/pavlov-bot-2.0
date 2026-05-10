@@ -218,3 +218,12 @@ Each command checks the invoking user's Discord roles against the configured rol
 - `menu` Opens an interactive admin UI with server and player selection.
 - `hybrid` Mode enables slash commands if set to `true` in `config.json`.
 - `custom` Used for sending commands that are not listed in the normal commands.
+
+---
+
+## Exemplar Custom Commands
+- AddAccessManager `PlayerName` = Allows the specified player to manage other players RCON Plus Permissions ingame.
+- RemoveAccessManager `PlayerName` = Removes the specified player's Manager Access.
+- AddWebhook `Webhook URL` = Adds a Webhook to monitor RCON Plus commands being used.
+- RemoveWebhook `Webhook URL` = Removes the specified Webhook URL.
+
