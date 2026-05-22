@@ -134,6 +134,24 @@ class Civilian(commands.Cog):
 
         await msg.edit(content=f"Pong! Latency: `{latency}ms` | Response: `{response_time}ms`")
 
+    @cmd(name="servers", help="List all available servers")
+    async def servers(self, ctx):
+    try:
+        server_names = list(config.keys())
+        if not server_names:
+            await ctx.send("No servers found in configuration.")
+            return
 
+        embed = discord.Embed(
+            title="🖥️ Available Servers",
+            description="\n".join(f"• `{name}`" for name in server_names),
+            color=discord.Color.blurple()
+        )
+        embed.set_footer(text=f"{len(server_names)} server(s) configured")
+        await ctx.send(embed=embed)
+    except Exception as e:
+        await ctx.send(f"Failed to retrieve server list: `{e}`")
+        
+        
 async def setup(bot):
     await bot.add_cog(Civilian(bot))
