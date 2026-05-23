@@ -246,40 +246,20 @@ class Mod(commands.Cog):
         except Exception as e:
             await ctx.send(f"Failed to run custom command: `{e}`")
 
+    @cmd(name="inspectall", help="Returns status for all players")
+    async def inspectall(self, ctx, server_name: str = None):
+        await self._send_rcon_output(ctx, server_name, "InspectAll", "Player inspection", require_mod=True)
+
+    
+    @cmd(name="banlist", help="Lists banned players")
+    async def banlist(self, ctx, server_name: str = None):
+        await self._send_rcon_output(ctx, server_name, "BanList", "Ban list", require_mod=True)
+
+    @cmd(name="itemlist", help="Lists available items")
+    async def itemlist(self, ctx, server_name: str = None):
+        await self._send_rcon_output(ctx, server_name, "ItemList", "Item list", require_mod=True)
 
 
-    @cmd(name="flush", help="Kick a random player to free a slot")
-async def flush(self, ctx, server_name: str = None):
-    server_name = resolve_server_name(server_name, config=config)
-    if not has_server_permission(ctx, server_name, required="modroles"):
-        await ctx.send("You do not have permission to use this command.")
-        return
-    try:
-        resp = await send_rcon(server_name, "RefreshList")
-        players = resp.get("PlayerList") if isinstance(resp, dict) else []
-        if not players:
-            await ctx.send("No players are currently on the server.")
-            return
-
-        candidates = [
-            p for p in players
-            if p.get("Username", "").lower() not in PROTECTED_USERNAMES
-        ]
-        if not candidates:
-            await ctx.send("Only protected players are online. No one was kicked.")
-            return
-
-        victim = random.choice(candidates)
-        uid = victim.get("UniqueId")
-        name = victim.get("Username", "Unknown")
-
-        if uid:
-            await send_rcon(server_name, f"Kick {uid}")
-            await ctx.send(f":boot: Flushed `{name}` from `{server_name}`.")
-        else:
-            await ctx.send("Failed to retrieve a valid UniqueId for the selected player.")
-    except Exception as e:
-        await ctx.send(f"Failed to flush player: `{e}`")
     # ── TTT ───────────────────────────────────────────────────────────────────
 
     @cmd(name="tttsetrole", help="Set a player's TTT role")

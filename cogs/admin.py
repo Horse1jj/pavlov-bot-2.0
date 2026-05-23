@@ -1,4 +1,5 @@
 import json
+import shlex
 
 from discord.ext import commands
 
@@ -17,6 +18,28 @@ cmd = commands.hybrid_command if config.get("hybrid") else commands.command
 class Admin(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+
+    def _resolve_custom_target(self, raw_input: str) -> tuple[str, str]:
+        raw_input = raw_input.strip()
+        if not raw_input:
+            raise ValueError("Please provide an RCON command to send.")
+
+        try:
+            parts = shlex.split(raw_input)
+        except ValueError as exc:
+            raise ValueError(f"Could not parse custom command: {exc}") from exc
+
+        server_name = None
+        command_parts = parts
+
+        if parts and parts[-1] in SERVERS:
+            server_name = parts[-1]
+            command_parts = parts[:-1]
+
+        if not command_parts:
+            raise ValueError("Please provide an RCON command after the server name.")
+
+        return resolve_server_name(server_name, config=config), " ".join(command_parts)
 
     @cmd(name="switchmap", help="Immediately switches to a map")
     async def switchmap(self, ctx, map_id: str, game_mode: str, server_name: str = None):
@@ -98,6 +121,15 @@ class Admin(commands.Cog):
             await ctx.send(f"Updated server name to `{name}` on `{server_name}`")
         except Exception as e:
             await ctx.send(f"Failed to update server name: `{e}`")
+
+
+    @cmd(name="rotatemap", aliases=["rotateMap"], help="Rotates to the next map")
+    async def rotatemap(self, ctx, server_name: str = None):
+        await self._send_rcon_output(ctx, server_name, "RotateMap", "Rotate map result", require_mod=True)
+
+    @cmd(name="moderatorlist", help="Lists server moderators")
+    async def moderatorlist(self, ctx, server_name: str = None):
+        await self._send_rcon_output(ctx, server_name, "ModeratorList", "Moderator list", require_mod=True)
 
     @cmd(name="shutdownserver", help="Immediately shuts down the server")
     async def shutdownserver(self, ctx, server_name: str = None):
@@ -213,17 +245,13 @@ class Admin(commands.Cog):
         except Exception as e:
             await ctx.send(f"Failed to set ammo type: `{e}`")
 
-    @cmd(name="addmod", help="Adds a player as server moderator")
-    async def addmod(self, ctx, unique_id: str, server_name: str = None):
-        server_name = resolve_server_name(server_name, config=config)
-        if not has_server_permission(ctx, server_name, required="modroles"):
-            await ctx.send("You do not have permission to use this command.")
-            return
+    @cmd(name="custom", help="Send a raw RCON command")
+    async def custom(self, ctx, *, raw_command: str):
         try:
-            await send_rcon(server_name, "AddMod", unique_id)
-            await ctx.send(f"Player with ID `{unique_id}` has been added as a moderator on `{server_name}`")
-        except Exception as e:
-            await ctx.send(f"Failed to add moderator: `{e}`")
+            server_name, command_text = self._resolve_custom_target(raw_command)
+        except ValueError as e:
+            await ctx.send(f"Failed to run custom command: `{e}`")
+            return
 
     @cmd(name="removemod", help="Removes a player from moderators")
     async def removemod(self, ctx, unique_id: str, server_name: str = None):
@@ -231,11 +259,12 @@ class Admin(commands.Cog):
         if not has_server_permission(ctx, server_name, required="modroles"):
             await ctx.send("You do not have permission to use this command.")
             return
+
         try:
-            await send_rcon(server_name, "RemoveMod", unique_id)
-            await ctx.send(f"Player with ID `{unique_id}` has been removed from moderators on `{server_name}`")
+            await send_rcon(server_name, command_text, wait_response=False)
+            await ctx.send(f"Acknowledged. Sent custom command to `{server_name}`.")
         except Exception as e:
-            await ctx.send(f"Failed to remove moderator: `{e}`")
+            await ctx.send(f"Failed to run custom command: `{e}`")
 
 
 async def setup(bot):
