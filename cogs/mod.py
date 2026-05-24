@@ -1,6 +1,7 @@
 import json
 import shlex
 import discord
+import random
 from discord.ext import commands
 from utils.permissions import has_server_permission
 from utils.sender_function import send_rcon
@@ -292,6 +293,36 @@ class Mod(commands.Cog):
             await ctx.send(embed=info_embed(f"**Item list on `{server_name}`:**\n```\n{response}\n```"))
         except Exception as e:
             await ctx.send(embed=error_embed(f"Failed to get item list: `{e}`"))
+    
+
+    @cmd(name="flush", help="Kick a random player to free a slot")
+    async def flush(self, ctx, server_name: str = None):
+        server_name = resolve_server_name(server_name, config=config)
+        if not has_server_permission(ctx, server_name, required="modroles"):
+            await ctx.send(embed=error_embed("You do not have permission to use this command."))
+            return
+        try:
+            resp = await send_rcon(server_name, "RefreshList")
+            players = resp.get("PlayerList") if isinstance(resp, dict) else []
+
+            if not players:
+                await ctx.send(embed=warn_embed(f"No players to kick on `{server_name}`."))
+                return
+
+            victim = random.choice(players)
+            uid = victim.get("UniqueId")
+            name = victim.get("Username", "Unknown")
+
+            if not uid:
+                await ctx.send(embed=error_embed("Failed to retrieve a valid UniqueId for the selected player."))
+                return
+
+            await send_rcon(server_name, "Kick", uid)
+            await ctx.send(embed=success_embed(f":boot: Kicked **{name}** (`{uid}`) from `{server_name}`."))
+
+        except Exception as e:
+            await ctx.send(embed=error_embed(f"Failed to flush server slot: `{e}`"))
+
 
     # ── TTT ───────────────────────────────────────────────────────────────────
 
