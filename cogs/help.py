@@ -45,6 +45,7 @@ PAVLOV_COMMANDS = {
         ("enablewhitelist", "[True/False]", "Enables or disables the whitelist"),
         ("setlimitedammotype", "[0-5]", "Sets ammo limitation type"),
         ("menu", "", "Opens the admin menu."),
+        ("flush", "", "kicks a random player from the server")
     ],
     "Moderation": [
         ("addmod", "[UniqueID]", "Adds a player as server moderator"),
@@ -68,6 +69,7 @@ PAVLOV_COMMANDS = {
     "Public": [
         ("players", "[Servername]", "Shows all players on the selected server"),
         ("ping", "", "Shows the bots ping"),
+        ("servers", "", "Lists all available servers"),
     ],
 }
 
