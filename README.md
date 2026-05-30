@@ -220,11 +220,3 @@ Each command checks the invoking user's Discord roles against the configured rol
 - `custom` Used for sending commands that are not listed in the normal commands.
 
 ---
-
-# 1.10.0 plans 
-
-- flush command 
-- servers command 
-- embedded responses 
-- specificy what perms are needed instead of current responses 
-
