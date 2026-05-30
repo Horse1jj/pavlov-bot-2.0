@@ -1,5 +1,4 @@
 import json
-import shlex
 import discord
 import random
 from discord.ext import commands
@@ -33,26 +32,6 @@ def warn_embed(description: str) -> discord.Embed:
 class Mod(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-
-    def _resolve_custom_target(self, raw_input: str) -> tuple[str, str]:
-        raw_input = raw_input.strip()
-        if not raw_input:
-            raise ValueError("Please provide an RCON command to send.")
-        try:
-            parts = shlex.split(raw_input)
-        except ValueError as exc:
-            raise ValueError(f"Could not parse custom command: {exc}") from exc
-
-        server_name = None
-        command_parts = parts
-        if parts and parts[-1] in SERVERS:
-            server_name = parts[-1]
-            command_parts = parts[:-1]
-
-        if not command_parts:
-            raise ValueError("Please provide an RCON command after the server name.")
-
-        return resolve_server_name(server_name, config=config), " ".join(command_parts)
 
     @cmd(name="kick", help="Kick a player from the server")
     async def kick(self, ctx, unique_id: str, server_name: str = None):
@@ -241,22 +220,6 @@ class Mod(commands.Cog):
             await ctx.send(embed=info_embed(f"**Status for team `{team_id}` in `{server_name}`:**\n```\n{response}\n```"))
         except Exception as e:
             await ctx.send(embed=error_embed(f"Failed to inspect team: `{e}`"))
-
-    @cmd(name="custom", help="Send a raw RCON command")
-    async def custom(self, ctx, *, raw_command: str):
-        try:
-            server_name, command_text = self._resolve_custom_target(raw_command)
-        except ValueError as e:
-            await ctx.send(embed=error_embed(f"Failed to run custom command: `{e}`"))
-            return
-        if not has_server_permission(ctx, server_name, required="adminroles"):
-            await ctx.send(embed=error_embed("You do not have permission to use this command."))
-            return
-        try:
-            await send_rcon(server_name, command_text, wait_response=False)
-            await ctx.send(embed=success_embed(f"Acknowledged. Sent custom command to `{server_name}`."))
-        except Exception as e:
-            await ctx.send(embed=error_embed(f"Failed to run custom command: `{e}`"))
 
     @cmd(name="inspectall", help="Returns status for all players")
     async def inspectall(self, ctx, server_name: str = None):

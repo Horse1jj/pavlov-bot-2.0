@@ -1,4 +1,4 @@
-iimport json
+import json
 import shlex
 import discord
 from discord.ext import commands
