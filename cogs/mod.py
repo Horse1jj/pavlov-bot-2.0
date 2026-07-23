@@ -2,6 +2,7 @@ import json
 import discord
 import random
 from discord.ext import commands
+from utils.discord_embeds import send_rcon_response
 from utils.permissions import has_server_permission
 from utils.sender_function import send_rcon
 from utils.server_config import load_servers, resolve_server_name
@@ -40,8 +41,8 @@ class Mod(commands.Cog):
             await ctx.send(embed=error_embed("You do not have permission to use this command."))
             return
         try:
-            await send_rcon(server_name, "Kick", unique_id)
-            await ctx.send(embed=success_embed(f"`{unique_id}` has been kicked from `{server_name}`."))
+            response = await send_rcon(server_name, "Kick", unique_id)
+            await send_rcon_response(ctx, server_name, "Kick", response)
         except Exception as e:
             await ctx.send(embed=error_embed(f"Failed to kick player: `{e}`"))
 
@@ -52,8 +53,8 @@ class Mod(commands.Cog):
             await ctx.send(embed=error_embed("You do not have permission to use this command."))
             return
         try:
-            await send_rcon(server_name, "Ban", unique_id)
-            await ctx.send(embed=success_embed(f"`{unique_id}` has been banned from `{server_name}`."))
+            response = await send_rcon(server_name, "Ban", unique_id)
+            await send_rcon_response(ctx, server_name, "Ban", response)
         except Exception as e:
             await ctx.send(embed=error_embed(f"Failed to ban player: `{e}`"))
 
@@ -64,8 +65,8 @@ class Mod(commands.Cog):
             await ctx.send(embed=error_embed("You do not have permission to use this command."))
             return
         try:
-            await send_rcon(server_name, "Unban", unique_id)
-            await ctx.send(embed=success_embed(f"`{unique_id}` has been unbanned from `{server_name}`."))
+            response = await send_rcon(server_name, "Unban", unique_id)
+            await send_rcon_response(ctx, server_name, "Unban", response)
         except Exception as e:
             await ctx.send(embed=error_embed(f"Failed to unban player: `{e}`"))
 
@@ -76,8 +77,8 @@ class Mod(commands.Cog):
             await ctx.send(embed=error_embed("You do not have permission to use this command."))
             return
         try:
-            await send_rcon(server_name, "Kill", unique_id)
-            await ctx.send(embed=success_embed(f"`{unique_id}` has been killed in `{server_name}`."))
+            response = await send_rcon(server_name, "Kill", unique_id)
+            await send_rcon_response(ctx, server_name, "Kill", response)
         except Exception as e:
             await ctx.send(embed=error_embed(f"Failed to kill player: `{e}`"))
 
@@ -91,8 +92,8 @@ class Mod(commands.Cog):
             await ctx.send(embed=error_embed("You do not have permission to use this command."))
             return
         try:
-            await send_rcon(server_name, "Slap", unique_id, str(damage))
-            await ctx.send(embed=success_embed(f"`{unique_id}` has been slapped for `{damage}` damage in `{server_name}`."))
+            response = await send_rcon(server_name, "Slap", unique_id, str(damage))
+            await send_rcon_response(ctx, server_name, "Slap", response)
         except Exception as e:
             await ctx.send(embed=error_embed(f"Failed to slap player: `{e}`"))
 
@@ -103,8 +104,8 @@ class Mod(commands.Cog):
             await ctx.send(embed=error_embed("You do not have permission to use this command."))
             return
         try:
-            await send_rcon(server_name, "SwitchTeam", unique_id, str(team_id))
-            await ctx.send(embed=success_embed(f"`{unique_id}` has been switched to team `{team_id}` in `{server_name}`."))
+            response = await send_rcon(server_name, "SwitchTeam", unique_id, str(team_id))
+            await send_rcon_response(ctx, server_name, "SwitchTeam", response)
         except Exception as e:
             await ctx.send(embed=error_embed(f"Failed to switch player team: `{e}`"))
 
@@ -115,8 +116,8 @@ class Mod(commands.Cog):
             await ctx.send(embed=error_embed("You do not have permission to use this command."))
             return
         try:
-            await send_rcon(server_name, "Teleport", unique_id, target_unique_id)
-            await ctx.send(embed=success_embed(f"`{unique_id}` has been teleported to `{target_unique_id}` in `{server_name}`."))
+            response = await send_rcon(server_name, "Teleport", unique_id, target_unique_id)
+            await send_rcon_response(ctx, server_name, "Teleport", response)
         except Exception as e:
             await ctx.send(embed=error_embed(f"Failed to teleport player: `{e}`"))
 
@@ -130,8 +131,8 @@ class Mod(commands.Cog):
             await ctx.send(embed=error_embed("You do not have permission to use this command."))
             return
         try:
-            await send_rcon(server_name, "GiveItem", unique_id, item_id, str(amount))
-            await ctx.send(embed=success_embed(f"`{amount}` of item `{item_id}` has been given to `{unique_id}` in `{server_name}`."))
+            response = await send_rcon(server_name, "GiveItem", unique_id, item_id, str(amount))
+            await send_rcon_response(ctx, server_name, "GiveItem", response)
         except Exception as e:
             await ctx.send(embed=error_embed(f"Failed to give item to player: `{e}`"))
 
@@ -142,8 +143,8 @@ class Mod(commands.Cog):
             await ctx.send(embed=error_embed("You do not have permission to use this command."))
             return
         try:
-            await send_rcon(server_name, "GiveCash", unique_id, str(amount))
-            await ctx.send(embed=success_embed(f"`{amount}` cash has been given to `{unique_id}` in `{server_name}`."))
+            response = await send_rcon(server_name, "GiveCash", unique_id, str(amount))
+            await send_rcon_response(ctx, server_name, "GiveCash", response)
         except Exception as e:
             await ctx.send(embed=error_embed(f"Failed to give cash to player: `{e}`"))
 
@@ -167,9 +168,8 @@ class Mod(commands.Cog):
             await ctx.send(embed=error_embed("You do not have permission to use this command."))
             return
         try:
-            await send_rcon(server_name, "Gag", unique_id, str(gag))
-            action = "gagged" if gag else "ungagged"
-            await ctx.send(embed=success_embed(f"`{unique_id}` has been **{action}** in `{server_name}`."))
+            response = await send_rcon(server_name, "Gag", unique_id, str(gag))
+            await send_rcon_response(ctx, server_name, "Gag", response)
         except Exception as e:
             await ctx.send(embed=error_embed(f"Failed to gag/ungag player: `{e}`"))
 
@@ -180,8 +180,8 @@ class Mod(commands.Cog):
             await ctx.send(embed=error_embed("You do not have permission to use this command."))
             return
         try:
-            await send_rcon(server_name, "SetPlayerSkin", unique_id, skin_id)
-            await ctx.send(embed=success_embed(f"`{unique_id}`'s skin has been set to `{skin_id}` in `{server_name}`."))
+            response = await send_rcon(server_name, "SetPlayerSkin", unique_id, skin_id)
+            await send_rcon_response(ctx, server_name, "SetPlayerSkin", response)
         except Exception as e:
             await ctx.send(embed=error_embed(f"Failed to set player skin: `{e}`"))
 
@@ -192,8 +192,8 @@ class Mod(commands.Cog):
             await ctx.send(embed=error_embed("You do not have permission to use this command."))
             return
         try:
-            await send_rcon(server_name, "ClearEmptyVehicles")
-            await ctx.send(embed=success_embed(f"All unoccupied vehicles have been removed from `{server_name}`."))
+            response = await send_rcon(server_name, "ClearEmptyVehicles")
+            await send_rcon_response(ctx, server_name, "ClearEmptyVehicles", response)
         except Exception as e:
             await ctx.send(embed=error_embed(f"Failed to remove empty vehicles: `{e}`"))
 
@@ -205,7 +205,7 @@ class Mod(commands.Cog):
             return
         try:
             response = await send_rcon(server_name, "InspectPlayer", unique_id)
-            await ctx.send(embed=info_embed(f"**Status for `{unique_id}` in `{server_name}`:**\n```\n{response}\n```"))
+            await send_rcon_response(ctx, server_name, "InspectPlayer", response)
         except Exception as e:
             await ctx.send(embed=error_embed(f"Failed to inspect player: `{e}`"))
 
@@ -217,7 +217,7 @@ class Mod(commands.Cog):
             return
         try:
             response = await send_rcon(server_name, "InspectTeam", str(team_id))
-            await ctx.send(embed=info_embed(f"**Status for team `{team_id}` in `{server_name}`:**\n```\n{response}\n```"))
+            await send_rcon_response(ctx, server_name, "InspectTeam", response)
         except Exception as e:
             await ctx.send(embed=error_embed(f"Failed to inspect team: `{e}`"))
 
@@ -229,7 +229,7 @@ class Mod(commands.Cog):
             return
         try:
             response = await send_rcon(server_name, "InspectAll")
-            await ctx.send(embed=info_embed(f"**Player inspection on `{server_name}`:**\n```\n{response}\n```"))
+            await send_rcon_response(ctx, server_name, "InspectAll", response)
         except Exception as e:
             await ctx.send(embed=error_embed(f"Failed to inspect all players: `{e}`"))
 
@@ -241,7 +241,7 @@ class Mod(commands.Cog):
             return
         try:
             response = await send_rcon(server_name, "BanList")
-            await ctx.send(embed=info_embed(f"**Ban list on `{server_name}`:**\n```\n{response}\n```"))
+            await send_rcon_response(ctx, server_name, "BanList", response)
         except Exception as e:
             await ctx.send(embed=error_embed(f"Failed to get ban list: `{e}`"))
 
@@ -253,7 +253,7 @@ class Mod(commands.Cog):
             return
         try:
             response = await send_rcon(server_name, "ItemList")
-            await ctx.send(embed=info_embed(f"**Item list on `{server_name}`:**\n```\n{response}\n```"))
+            await send_rcon_response(ctx, server_name, "ItemList", response)
         except Exception as e:
             await ctx.send(embed=error_embed(f"Failed to get item list: `{e}`"))
     
@@ -280,8 +280,8 @@ class Mod(commands.Cog):
                 await ctx.send(embed=error_embed("Failed to retrieve a valid UniqueId for the selected player."))
                 return
 
-            await send_rcon(server_name, "Kick", uid)
-            await ctx.send(embed=success_embed(f":boot: Kicked **{name}** (`{uid}`) from `{server_name}`."))
+            response = await send_rcon(server_name, "Kick", uid)
+            await send_rcon_response(ctx, server_name, "Kick", response)
 
         except Exception as e:
             await ctx.send(embed=error_embed(f"Failed to flush server slot: `{e}`"))
@@ -296,8 +296,8 @@ class Mod(commands.Cog):
             await ctx.send(embed=error_embed("You do not have permission to use this command."))
             return
         try:
-            await send_rcon(server_name, "TTTSetRole", unique_id, str(role_id))
-            await ctx.send(embed=success_embed(f"`{unique_id}`'s TTT role has been set to `{role_id}` in `{server_name}`."))
+            response = await send_rcon(server_name, "TTTSetRole", unique_id, str(role_id))
+            await send_rcon_response(ctx, server_name, "TTTSetRole", response)
         except Exception as e:
             await ctx.send(embed=error_embed(f"Failed to set player's TTT role: `{e}`"))
 
@@ -308,8 +308,8 @@ class Mod(commands.Cog):
             await ctx.send(embed=error_embed("You do not have permission to use this command."))
             return
         try:
-            await send_rcon(server_name, "TTTSetKarma", unique_id, str(karma))
-            await ctx.send(embed=success_embed(f"`{unique_id}`'s TTT karma has been set to `{karma}` in `{server_name}`."))
+            response = await send_rcon(server_name, "TTTSetKarma", unique_id, str(karma))
+            await send_rcon_response(ctx, server_name, "TTTSetKarma", response)
         except Exception as e:
             await ctx.send(embed=error_embed(f"Failed to set player's TTT karma: `{e}`"))
 
@@ -320,9 +320,8 @@ class Mod(commands.Cog):
             await ctx.send(embed=error_embed("You do not have permission to use this command."))
             return
         try:
-            await send_rcon(server_name, "TTTPauseTimer", str(pause))
-            action = "paused" if pause else "unpaused"
-            await ctx.send(embed=success_embed(f"The TTT timer has been **{action}** in `{server_name}`."))
+            response = await send_rcon(server_name, "TTTPauseTimer", str(pause))
+            await send_rcon_response(ctx, server_name, "TTTPauseTimer", response)
         except Exception as e:
             await ctx.send(embed=error_embed(f"Failed to pause/unpause TTT timer: `{e}`"))
 
@@ -333,8 +332,8 @@ class Mod(commands.Cog):
             await ctx.send(embed=error_embed("You do not have permission to use this command."))
             return
         try:
-            await send_rcon(server_name, "TTTEndRound")
-            await ctx.send(embed=success_embed(f"The current TTT round has been ended in `{server_name}`."))
+            response = await send_rcon(server_name, "TTTEndRound")
+            await send_rcon_response(ctx, server_name, "TTTEndRound", response)
         except Exception as e:
             await ctx.send(embed=error_embed(f"Failed to end TTT round: `{e}`"))
 
@@ -345,8 +344,8 @@ class Mod(commands.Cog):
             await ctx.send(embed=error_embed("You do not have permission to use this command."))
             return
         try:
-            await send_rcon(server_name, "TTTFlushKarma")
-            await ctx.send(embed=warn_embed(f"All player karma has been reset to 1200 in `{server_name}`."))
+            response = await send_rcon(server_name, "TTTFlushKarma")
+            await send_rcon_response(ctx, server_name, "TTTFlushKarma", response)
         except Exception as e:
             await ctx.send(embed=error_embed(f"Failed to flush TTT karma: `{e}`"))
 
@@ -357,8 +356,8 @@ class Mod(commands.Cog):
             await ctx.send(embed=error_embed("You do not have permission to use this command."))
             return
         try:
-            await send_rcon(server_name, "TTTGiveCredits", unique_id, str(amount))
-            await ctx.send(embed=success_embed(f"`{amount}` TTT credits have been given to `{unique_id}` in `{server_name}`."))
+            response = await send_rcon(server_name, "TTTGiveCredits", unique_id, str(amount))
+            await send_rcon_response(ctx, server_name, "TTTGiveCredits", response)
         except Exception as e:
             await ctx.send(embed=error_embed(f"Failed to give TTT credits to player: `{e}`"))
 

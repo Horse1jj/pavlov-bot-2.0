@@ -2,6 +2,7 @@ import discord
 import json
 from discord.ext import commands
 from discord.ui import View, Select, Modal, TextInput
+from utils.discord_embeds import send_rcon_response, status_embed
 from utils.sender_function import send_rcon
 from utils.permissions import has_server_permission
 
@@ -71,13 +72,21 @@ class ServerSelect(View):
 
     async def server_selected(self, interaction: discord.Interaction):
         if interaction.user != self.ctx.author:
-            await interaction.response.send_message("This menu is not for you.", ephemeral=True)
+            await interaction.response.send_message(embed=status_embed(
+                "Unauthorized",
+                "This menu is not for you.",
+                success=False
+            ), ephemeral=True)
             return
 
         server_name = interaction.data["values"][0]
 
         if not has_server_permission(self.ctx, server_name, required="modroles"):
-            await interaction.response.send_message("You do not have permission for this server.", ephemeral=True)
+            await interaction.response.send_message(embed=status_embed(
+                "Permission denied",
+                "You do not have permission for this server.",
+                success=False
+            ), ephemeral=True)
             return
 
         await interaction.response.defer()
@@ -86,7 +95,11 @@ class ServerSelect(View):
             response = await send_rcon(server_name, "RefreshList")
             player_list = response.get("PlayerList", []) if isinstance(response, dict) else []
         except Exception as e:
-            await interaction.followup.send(f"Failed to fetch players: `{e}`", ephemeral=True)
+            await interaction.followup.send(embed=status_embed(
+                "RCON error",
+                f"Failed to fetch players: `{e}`",
+                success=False
+            ), ephemeral=True)
             return
 
         await interaction.edit_original_response(
@@ -135,17 +148,22 @@ class CommandSelect(View):
         if not needs_player:
             await interaction.response.defer()
             try:
-                await send_rcon(self.server_name, rcon_cmd, *extra_args)
+                response = await send_rcon(self.server_name, rcon_cmd, *extra_args)
+                await send_rcon_response(self.ctx, self.server_name, rcon_cmd, response)
                 await interaction.edit_original_response(
                     embed=discord.Embed(
-                        title="✅ Done",
+                        title="✅ Command executed",
                         description=f"`{label}` executed on `{self.server_name}`.\n\nSelect another command below.",
                         color=discord.Color.green()
                     ),
                     view=self
                 )
             except Exception as e:
-                await interaction.followup.send(f"Failed: `{e}`", ephemeral=True)
+                await interaction.followup.send(embed=status_embed(
+                    "RCON error",
+                    f"Failed: `{e}`",
+                    success=False
+                ), ephemeral=True)
             return
 
         if not self.player_list:
@@ -191,7 +209,11 @@ class PlayerSelect(View):
 
     async def player_selected(self, interaction: discord.Interaction):
         if interaction.user != self.ctx.author:
-            await interaction.response.send_message("This menu is not for you.", ephemeral=True)
+            await interaction.response.send_message(embed=status_embed(
+                "Unauthorized",
+                "This menu is not for you.",
+                success=False
+            ), ephemeral=True)
             return
 
         unique_id = interaction.data["values"][0]
@@ -199,17 +221,22 @@ class PlayerSelect(View):
         await interaction.response.defer()
 
         try:
-            await send_rcon(self.server_name, self.rcon_cmd, unique_id, *self.extra_args)
+            response = await send_rcon(self.server_name, self.rcon_cmd, unique_id, *self.extra_args)
+            await send_rcon_response(self.ctx, self.server_name, self.rcon_cmd, response)
             await interaction.edit_original_response(
                 embed=discord.Embed(
-                    title="Done",
+                    title="✅ Command executed",
                     description=f"`{self.label}` executed on `{unique_id}` in `{self.server_name}`.\n\nSelect another command below.",
                     color=discord.Color.green()
                 ),
                 view=self.command_view
             )
         except Exception as e:
-            await interaction.followup.send(f"Failed: `{e}`", ephemeral=True)
+            await interaction.followup.send(embed=status_embed(
+                "RCON error",
+                f"Failed: `{e}`",
+                success=False
+            ), ephemeral=True)
 
 
 class Panel(commands.Cog):
